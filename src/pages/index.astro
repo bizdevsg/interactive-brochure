@@ -1,0 +1,9 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { BrochureShell } from "../features/brochure/components/BrochureShell";
+---
+
+<BaseLayout>
+  <!-- Di-render di server, lalu di-hydrate di browser sebagai React island -->
+  <BrochureShell client:load />
+</BaseLayout>

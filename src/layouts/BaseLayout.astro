@@ -1,0 +1,30 @@
+---
+import "@fontsource-variable/plus-jakarta-sans";
+import "../styles/globals.css";
+import { siteConfig } from "../config/site";
+
+const title = "Kenali Sebelum Memulai — Brosur Interaktif Solid Mini";
+const ogTitle = "Kenali Sebelum Memulai — Solid Mini";
+const canonical = new URL("/", siteConfig.url).href;
+---
+
+<!doctype html>
+<html lang="id" class="h-full antialiased">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>{title}</title>
+    <meta name="description" content={siteConfig.description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={siteConfig.description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:site_name" content={siteConfig.company} />
+  </head>
+  <body class="min-h-full">
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,206 @@
+@import "tailwindcss";
+
+/* Tema dan utilitas brosur dipakai oleh seluruh slide. */
+
+/* SGB Premium Dark & Gold — token warna sesuai PRD §4.2–4.3 */
+:root {
+  --gold: #f0b100;
+  --gold-soft: #d9a000;
+  --ink: #000000;
+  --ink-deep: #000000;
+  --surface: #1c1c1c;
+  --surface-2: #252525;
+  --line: #333333;
+  --muted: #a3a3a3;
+  --danger: #ef4444;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@theme inline {
+  --color-black: #000000;
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-ink: var(--ink);
+  --color-ink-deep: var(--ink-deep);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-muted: var(--muted);
+  --color-danger: var(--danger);
+  --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+html,
+body {
+  background: #000000;
+  color: #fff;
+  font-family: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+/* Fokus terlihat (WCAG 2.2) */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Cahaya diagonal emas + radial glow di pojok kanan atas (statis, tanpa animasi berat) */
+.gold-light {
+  background:
+    radial-gradient(ellipse 70% 40% at 85% 0%,
+      rgb(240 177 0 / 0.38),
+      transparent 70%),
+    linear-gradient(160deg,
+      transparent 52%,
+      rgb(240 177 0 / 0.08) 62%,
+      transparent 72%);
+}
+
+/* Garis cahaya diagonal tipis (statis) di atas glow emas — mengikuti referensi hero */
+.gold-light {
+  overflow: hidden;
+}
+
+.gold-light::before,
+.gold-light::after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  border-radius: 9999px;
+  transform-origin: right center;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgb(248 213 107 / 0.7) 50%,
+      rgb(255 236 170 / 1) 100%);
+  box-shadow: 0 0 14px 2px rgb(240 177 0 / 0.45);
+}
+
+/* Ujung kanan garis menempel di tepi kanan; badan garis miring turun ke kiri, di area atas (header) */
+.gold-light::before {
+  top: 0;
+  right: 0;
+  width: 11.5rem;
+  height: 2px;
+  transform: rotate(-24deg);
+}
+
+.gold-light::after {
+  top: 5.5rem;
+  right: 0;
+  width: 9.5rem;
+  height: 2px;
+  opacity: 0.75;
+  transform: rotate(-24deg);
+}
+
+.gold-gradient {
+  background: linear-gradient(180deg, #f8d56b 0%, #f0b100 55%, #c98f00 100%);
+}
+
+.gold-text {
+  background: linear-gradient(180deg, #f8d56b 0%, #f0b100 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Sembunyikan scrollbar di seluruh brosur (scroll tetap berfungsi) */
+html,
+body,
+*,
+.scroll-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar,
+.scroll-hide::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Accordion tanpa animasi layout berat: grid-rows trick */
+.expand {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.expand[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.expand>div {
+  overflow: hidden;
+}
+
+dialog.sheet {
+  margin: auto auto 0 auto;
+  width: 100%;
+  max-width: 430px;
+  max-height: 85dvh;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border: 0;
+}
+
+dialog.sheet::backdrop {
+  background: rgb(0 0 0 / 0.7);
+}
+
+dialog.sheet[open] {
+  animation: sheet-in 0.28s ease-out;
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes float-y {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.float-slow {
+  animation: float-y 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .float-slow {
+    animation: none;
+  }
+}
