@@ -18,7 +18,11 @@ export const quizQuestions: QuizQuestion[] = [
     question: "Apakah biaya transaksi hanya selisih harga (spread)?",
     options: [
       { id: "a", label: "Ya, hanya spread." },
-      { id: "b", label: "Tidak, ada komponen lain seperti komisi dan pajak yang perlu dicek." },
+      {
+        id: "b",
+        label:
+          "Tidak, ada komponen lain seperti komisi dan pajak yang perlu dicek.",
+      },
       { id: "c", label: "Tidak ada biaya sama sekali." },
     ],
     correctId: "b",

@@ -17,14 +17,15 @@ export function SlideNumber({
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute right-7 top-0 isolate flex h-[9rem] select-none text-[9rem] font-black italic leading-none text-gold/[0.2]"
+      className="pointer-events-none absolute right-7 top-0 isolate flex h-[10rem] select-none text-[10rem] font-black italic leading-none text-gold/[0.2]"
     >
       {pad(index)
         .split("")
         .map((digit, position) => (
           <span
             key={position}
-            className="relative block h-full w-[0.7em] [clip-path:inset(0_-0.18em)]"
+            // Lebar mengikuti angka Calibri (±0,51em) agar kedua digit rapat
+            className="relative block h-full w-[0.52em] [clip-path:inset(0_-0.18em)]"
           >
             <AnimatePresence initial={false} custom={direction}>
               <motion.span
@@ -67,9 +68,7 @@ export function SlideHeader({ index }: { index: number }) {
             className="h-9 w-auto"
             priority
           />
-          <span className="text-lg">
-            <span className="font-extrabold">Solid Gold Berjangka</span>
-          </span>
+          <span className="text-xl font-bold tracking-[0.3em]">Solid</span>
         </div>
         <button
           type="button"
@@ -80,13 +79,13 @@ export function SlideHeader({ index }: { index: number }) {
           <span>Risiko</span>
         </button>
       </div>
-      <p className="relative mt-4 text-xs font-bold uppercase tracking-[0.2em] text-muted">
+      {/* <p className="relative mt-4 text-xs font-bold uppercase tracking-[0.2em] text-muted">
         {pad(chapterNumber(index))} / {CONTENT_SLIDE_COUNT} ·{" "}
         {SLIDES[index].category}
       </p>
       <div className="relative mt-3">
         <SlideProgress index={chapterNumber(index)} />
-      </div>
+      </div> */}
     </header>
   );
 }

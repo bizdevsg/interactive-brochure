@@ -1,5 +1,4 @@
 export type SlideId =
-  | "intro"
   | "cover"
   | "ecosystem"
   | "products"

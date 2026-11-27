@@ -6,11 +6,14 @@ import { useBrochure } from "./BrochureContext";
 
 /** Navigasi bawah untuk berpindah antarslide. */
 export function SlideNavigation({
-  prevLabel = "Prev",
-  nextLabel = "Next",
+  prevLabel = "Kembali",
+  nextLabel = "Lanjut",
+  onPrev,
 }: {
   prevLabel?: string;
   nextLabel?: string;
+  /** Pengganti aksi tombol kiri; bila diisi, tombol tetap aktif di slide pertama */
+  onPrev?: () => void;
 }) {
   const { index, next, prev, goTo } = useBrochure();
   const isLast = index === SLIDES.length - 1;
@@ -18,13 +21,13 @@ export function SlideNavigation({
   return (
     <nav
       aria-label="Navigasi slide"
-      className="absolute inset-x-0 bottom-0 z-20 bg-linear-to-t from-ink via-ink via-80% to-transparent px-5 pb-3 pt-8"
+      className="absolute inset-x-0 bottom-0 z-20 px-5 pb-3 pt-8"
     >
       <div className="grid grid-cols-2 gap-3">
         <OutlineButton
           className="!min-h-10 !px-4 !text-sm"
-          onClick={prev}
-          disabled={index === 0}
+          onClick={onPrev ?? prev}
+          disabled={!onPrev && index === 0}
         >
           <ArrowLeft className="size-4" aria-hidden /> {prevLabel}
         </OutlineButton>

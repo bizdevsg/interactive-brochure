@@ -10,13 +10,13 @@ import {
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { GoldButton } from "@/components/ui/GoldButton";
+import { Image } from "@/components/ui/Image";
 import { track } from "@/lib/analytics";
 import { SLIDES, chapterNumber } from "../data/slides";
-import { IntroSlide } from "../slides/IntroSlide";
 import { globalRiskSheet, riskContent } from "../data/content";
 import { useSlideNavigation } from "../hooks/useSlideNavigation";
 import type { QuizState, SlideId } from "../types/brochure";
-import { CoverSlide } from "../slides/CoverSlide";
+import { OpeningSlide } from "../slides/OpeningSlide";
 import { EcosystemSlide } from "../slides/EcosystemSlide";
 import { ProductsSlide } from "../slides/ProductsSlide";
 import { SimulationSlide } from "../slides/SimulationSlide";
@@ -32,8 +32,7 @@ import { SlideNavigation } from "./SlideNavigation";
 
 /** Registry slide. Slide yang belum dibuat memakai placeholder (dikerjakan satu per satu). */
 const registry: Partial<Record<SlideId, ComponentType>> = {
-  intro: IntroSlide,
-  cover: CoverSlide,
+  cover: OpeningSlide,
   ecosystem: EcosystemSlide,
   products: ProductsSlide,
   simulation: SimulationSlide,
@@ -67,6 +66,13 @@ export function BrochureShell() {
   const [riskOpen, setRiskOpen] = useState(false);
   const [quiz, setQuiz] = useState<QuizState>({ answers: {}, current: 0 });
   const contentRef = useRef<HTMLDivElement>(null);
+  const [coverRevealed, setCoverRevealed] = useState(false);
+
+  // Setelah masuk bab (lewat tombol, geser, atau deep link), kembali ke pembuka
+  // langsung menampilkan Sampul. goTo(0) mengembalikannya ke Intro.
+  useEffect(() => {
+    if (index > 0) setCoverRevealed(true);
+  }, [index]);
 
   const meta = SLIDES[index];
   const Slide = registry[meta.id];
@@ -85,16 +91,19 @@ export function BrochureShell() {
       index,
       goTo: (i: number) => {
         setNavigated(true);
+        if (i === 0) setCoverRevealed(false);
         goTo(i);
       },
       next: wrap(next, "slide_next"),
       prev: wrap(prev, "slide_previous"),
       openRisk: () => setRiskOpen(true),
       navigated,
+      coverRevealed,
+      revealCover: () => setCoverRevealed(true),
       quiz,
       setQuiz,
     }),
-    [index, goTo, next, prev, wrap, navigated, quiz],
+    [index, goTo, next, prev, wrap, navigated, coverRevealed, quiz],
   );
 
   useEffect(() => {
@@ -154,15 +163,23 @@ export function BrochureShell() {
   return (
     <BrochureContext.Provider value={ctx}>
       <MotionConfig reducedMotion="user">
-        {/* fixed inset-0, bukan dvh: sebagian simulator HP melaporkan dvh lebih pendek dari layarnya */}
-        <div className="fixed inset-0 flex justify-center bg-ink">
+        {/* Pakai dvh agar navigasi bawah tidak tertutup bar browser di HP (PRD §3.3) */}
+        <div className="flex min-h-dvh justify-center bg-ink">
           <main
-            className="relative h-full w-full max-w-[430px] overflow-hidden bg-ink"
+            className="relative h-dvh w-full max-w-[430px] overflow-hidden bg-ink"
             onTouchStart={onTouchStart}
             onTouchEnd={onTouchEnd}
           >
+            {/* Latar utama semua halaman: diam di tempat saat isi digulir atau slide berganti */}
+            <Image
+              src="/images/bg-main.webp"
+              alt=""
+              fill
+              priority
+              className="pointer-events-none object-cover object-bottom"
+            />
             <AnimatePresence mode="wait" initial={false} custom={dir}>
-              {(meta.id === "intro" || meta.id === "cover") && Slide ? (
+              {meta.id === "cover" && Slide ? (
                 <motion.div
                   key={meta.id}
                   custom={dir}
@@ -188,7 +205,8 @@ export function BrochureShell() {
                 >
                   <div
                     ref={contentRef}
-                    className="relative isolate min-h-0 flex-1 overflow-y-auto overscroll-contain scroll-hide"
+                    // overflow-x-hidden: tanpa ini, elemen yang menonjol ke samping membuat layar bisa digeser
+                    className="fade-under-nav relative isolate min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain scroll-hide"
                   >
                     {/* Cahaya emas dekoratif: berada di dalam area scroll agar ikut bergulir */}
                     <div

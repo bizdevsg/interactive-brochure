@@ -9,8 +9,8 @@ export const coverContent = {
   titleHighlight: "Pemahaman lebih besar.",
   description:
     "Kenali akun Mini dan Mikro melalui aplikasi Solid. Pahami cara kerja, biaya, dan risikonya sebelum menentukan langkah Anda.",
-  cta: "Buka brosur",
-  footnote: "Materi edukasi · bukan ajakan bertransaksi",
+  cta: "Swipe Up",
+  footnote: "Kenali lebih dekat dengan Solid Gold",
 };
 
 export const introContent = {
@@ -40,19 +40,19 @@ export const chapterCardTitles: Record<string, string> = {
   video: "Video & Promo",
   testimonial: "Testimoni Nasabah",
   cost: "Bukan selisih harga saja",
-  risk: "Peluang dan Risiko",
-  quiz: "Sudah siap belajar?",
-  closing: "Kanal Resmi",
+  risk: "Peluang dan risiko",
+  quiz: "Sudah siap belajar lanjut?",
+  closing: "Lanjut lewat kanal kami",
 };
 
-export type EcosystemCategory = "profil" | "pengawasan" | "dana";
+export type EcosystemRoleId = "dana" | "pengawasan" | "pialang" | "aplikasi";
 
-export interface EcosystemItem {
-  id: string;
-  category: EcosystemCategory;
+export interface EcosystemRole {
+  id: EcosystemRoleId;
   title: string;
-  tagline: string;
   body: string;
+  /** Path ikon 3D, mis. "/images/ekosistem/dana.webp". null = pakai ikon garis. */
+  image: string | null;
   verified: boolean;
 }
 
@@ -60,201 +60,177 @@ export const ecosystemContent = {
   titleLead: "Siapa berperan di balik",
   titleHighlight: "transaksi?",
   description:
-    "Ketuk tiap peran. Pahami bedanya aplikasi, pialang, pengawasan, dan alur dana.",
-  categories: [
-    { id: "profil", label: "Profil perusahaan" },
-    { id: "pengawasan", label: "Pengawasan" },
-    { id: "dana", label: "Dana nasabah" },
-  ] as { id: EcosystemCategory; label: string }[],
-  nodes: [
+    "Setiap transaksi melibatkan peran yang berbeda. Kenali fungsi aplikasi, pialang, pengawasan, dan alur dana.",
+  customer: {
+    name: "Anda",
+    role: "Calon Nasabah",
+    image: "/images/icon-user.webp" as string | null,
+  },
+  /** Urutan = posisi kartu dari kiri ke kanan; yang pertama terpilih di awal. */
+  roles: [
     {
-      id: "anda",
-      initial: "A",
-      name: "Anda",
-      role: "Calon nasabah",
-      target: "dana",
-      itemId: "nasabah",
-    },
-    {
-      id: "solid",
-      initial: "SC",
-      name: "Solid",
-      role: "Pialang/Broker",
-      target: "profil",
-      itemId: "solid",
-    },
-    {
-      id: "bursa",
-      initial: "B",
-      name: "Bursa Berjangka",
-      role: "Penyelenggara",
-      target: "profil",
-      itemId: "bursa",
-    },
-  ] as {
-    id: string;
-    initial: string;
-    name: string;
-    role: string;
-    target: EcosystemCategory;
-    itemId: string;
-  }[],
-  items: [
-    {
-      id: "solid",
-      category: "profil",
-      title: "Solid",
-      tagline: "Aplikasi untuk mengakses layanan transaksi.",
-      body: "Solid adalah aplikasi, bukan regulator atau lembaga penjamin keuntungan. Ia menjadi pintu akses ke layanan pialang.",
-      verified: false,
-    },
-    {
-      id: "pialang",
-      category: "profil",
-      title: "Pialang SGB",
-      tagline: "Pihak penyedia layanan kepada nasabah.",
-      body: "Profil, identitas hukum, izin, dan hubungan kelembagaan SGB perlu dicek melalui sumber resmi terkini.",
-      verified: false,
-    },
-    {
-      id: "regulator",
-      category: "pengawasan",
-      title: "Regulator",
-      tagline: "Pihak yang mengawasi kegiatan perdagangan berjangka.",
-      body: "Nama dan kewenangan regulator dapat berubah mengikuti peraturan. Periksa situs regulator untuk informasi terkini.",
-      verified: false,
-    },
-    {
-      id: "bursa",
-      category: "pengawasan",
-      title: "Bursa berjangka",
-      tagline: "Penyelenggara tempat kontrak diperdagangkan.",
-      body: "Peran dan nama bursa perlu dikonfirmasi melalui kanal resmi sebelum dipublikasikan.",
-      verified: false,
-    },
-    {
-      id: "kliring",
-      category: "pengawasan",
-      title: "Lembaga kliring",
-      tagline: "Pihak yang mengelola penyelesaian transaksi.",
-      body: "Peran lembaga kliring perlu dikonfirmasi melalui kanal resmi sebelum dipublikasikan.",
-      verified: false,
-    },
-    {
-      id: "nasabah",
-      category: "dana",
-      title: "Anda (calon nasabah)",
-      tagline: "Pemilik keputusan dan tanggung jawab atas posisinya.",
-      body: "Anda perlu memahami produk, biaya, dan risiko sebelum membuka akun. Tidak perlu terburu-buru.",
+      id: "dana",
+      title: "Pengelolaan Dana Nasabah",
+      body: "Menjaga dan nasabah secara terpisah di rekening khusus (Segregated Account).",
+      image: "/images/icon-dompet.webp",
       verified: true,
     },
     {
-      id: "rekening",
-      category: "dana",
-      title: "Rekening dana",
-      tagline: "Alur dana perlu diperiksa langsung.",
-      body: "Pastikan rekening tujuan dana sesuai informasi resmi SGB. Jangan transfer ke rekening yang tidak terverifikasi.",
-      verified: false,
+      id: "pengawasan",
+      title: "Pengawasan & Regulasi",
+      body: "Mengawasi dan mengatur perdagangan berjangka.",
+      image: "/images/icon-sheild-law.webp",
+      verified: true,
     },
     {
-      id: "pengaduan",
-      category: "dana",
-      title: "Pengaduan",
-      tagline: "Ada jalur jika terjadi masalah.",
-      body: "Informasi jalur pengaduan resmi perlu dilengkapi dari kanal resmi SGB.",
-      verified: false,
+      id: "pialang",
+      title: "Pialang Berjangka SGB",
+      body: "Penyelenggara layanan perdagangan berjangka.",
+      image: "/images/icon-hand-shake.webp",
+      verified: true,
     },
-  ] as EcosystemItem[],
-  note: "Peran di atas dijelaskan secara umum, bukan jaminan. Verifikasi status perusahaan, izin, dan rekening langsung melalui kanal resmi SGB dan situs regulator sebelum membuka akun.",
+    {
+      id: "aplikasi",
+      title: "Aplikasi SG Solid",
+      body: "Platform untuk mengakses informasi dan layanan transaksi.",
+      image: "/images/icon-hp-sg.webp",
+      verified: true,
+    },
+  ] as EcosystemRole[],
+  note: "Ini merupakan gambaran umum ekosistem perdagangan berjangka. Periksa legalitas, izin, dan status rekening melalui kanal resmi perusahaan serta regulator terkait sebelum melakukan transaksi.",
   verifyBadge: "PERLU VERIFIKASI",
 };
 
 export const videoContent = {
-  titleLead: "Video & Promo —",
-  titleHighlight: "Demo",
+  titleLead: "Video &",
+  titleHighlight: "Promo",
   description:
-    "Contoh isi sementara. Bukan program atau penawaran resmi; semua materi dapat diganti melalui admin.",
-  badge: "DEMO — BUKAN PROMO RESMI",
+    "Lihat video pengenalan untuk memahami layanan dan fitur SG Solid.",
+  carouselLabel: "Video",
+  posterCaption: "PT SOLID GOLD BERJANGKA",
   unavailable: "Video belum tersedia",
-  previous: "Sebelumnya",
-  next: "Berikutnya",
+  failed: "Video tidak dapat dimuat",
+  previous: "Video sebelumnya",
+  next: "Video berikutnya",
   details: "Baca detail lengkap",
+  detailMissing: "Teks lengkap belum tersedia.",
+  verifyBadge: "PERLU VERIFIKASI",
   play: "Putar video",
+  /**
+   * src: path video yang sudah disetujui, mis. "/videos/profil.mp4". null = belum diunggah.
+   * poster: gambar thumbnail. detail: teks lengkap untuk "Baca detail lengkap".
+   */
   items: [
     {
-      id: "demo-1",
-      title: "Contoh video promosi",
+      id: "company-profile",
+      title: "Company Profile",
       summary:
-        "Video demo tanpa suara. Ganti dengan video promosi yang sudah disetujui.",
-      /** Isi dengan path video yang disetujui, mis. "/videos/demo.mp4". null = belum diunggah. */
+        "PT Solid Gold Berjangka (SGB) adalah perusahaan pialang berjangka terkemuka yang berdiri sejak tahun 2002 dan beroperasi …",
+      detail: null as string | null,
       src: null as string | null,
       poster: null as string | null,
+      verified: false,
+    },
+    {
+      id: "video-2",
+      title: "Video 2",
+      summary: "Materi video belum tersedia.",
+      detail: null as string | null,
+      src: null as string | null,
+      poster: null as string | null,
+      verified: false,
+    },
+    {
+      id: "video-3",
+      title: "Video 3",
+      summary: "Materi video belum tersedia.",
+      detail: null as string | null,
+      src: null as string | null,
+      poster: null as string | null,
+      verified: false,
     },
   ],
 };
 
 export const testimonialContent = {
-  titleLead: "Testimoni Nasabah —",
-  titleHighlight: "Demo",
+  titleLead: "Cerita dari",
+  titleMiddle: "Berbagai",
+  titleHighlight: "Perspektif",
   description:
-    "Seluruh contoh di bagian ini fiktif, bukan pengalaman atau pernyataan nasabah nyata.",
+    "Kenali pengalaman belajar dan mengenal pasar dari berbagai sudut pandang.",
+  /** Wajib tetap tampil selama nama, foto, dan kutipan masih fiktif (PRD §6 SL-07) */
+  // disclaimer:
+  //   "Ilustrasi demo: nama, foto, dan kutipan bersifat fiktif, bukan testimoni nasabah nyata.",
+  closingLead: "Berbagai Perspektif,",
+  closingHighlight: "Satu Tujuan",
+  closingBody:
+    "Belajar, memahami, dan mengelola peluang dengan lebih bijak bersama SG Solid.",
   badge: "DEMO — FIKTIF, BUKAN NASABAH NYATA",
+  /** Nama, peran, dan kutipan fiktif; isi `photo` dengan path gambar bila sudah ada */
   items: [
     {
-      id: "t1",
-      quote: "Urutan materinya membantu saya memahami istilah dasar.",
-      name: "Contoh 1 · Memahami dasar",
+      id: "nadia",
+      name: "Nadia",
+      role: "Freelancer",
+      quote:
+        "Cocok buat aku yang sibuk. Mulai dari Akun Mikro, prosesnya praktis dan fleksibel.",
+      photo: "/images/people/testi-2.webp" as string | null,
     },
     {
-      id: "t2",
-      quote: "Penjelasan risikonya jelas dan saya tidak merasa didesak.",
-      name: "Contoh 2 · Memahami risiko",
+      id: "dimas",
+      name: "Dimas",
+      role: "Pemilik UMKM",
+      quote: "Dengan Akun Mini bisa atur modal lebih rapi sesuai budget saya.",
+      photo: "/images/people/testi-3.webp" as string | null,
     },
     {
-      id: "t3",
-      quote: "Saya jadi tahu biaya bukan hanya selisih harga.",
-      name: "Contoh 3 · Memahami biaya",
+      id: "rizky",
+      name: "Rizky",
+      role: "Staf Admin",
+      quote: "Bisa mulai dengan modal terjangkau, jadi aman sambil belajar.",
+      photo: "/images/people/testi-1.webp" as string | null,
     },
   ],
+  cardBadge: "DEMO · FIKTIF",
   sourceLabel: "Naskah fiktif",
   replaceNote: "Ganti dengan testimoni asli setelah mendapat izin.",
+  carouselLabel: "Testimoni demo",
   previous: "Sebelumnya",
   next: "Berikutnya",
   details: "Baca detail lengkap",
 };
 
 export const costContent = {
-  titleLead: "Bukan selisih harga",
-  titleHighlight: "saja.",
+  titleLead: "Pahami Biaya",
+  titleHighlight: "Sebelum Transaksi",
   description:
-    "Kenali biaya sebelum melihat hasil bersih. Ketuk istilah yang belum dipahami.",
+    "Kenali komponen biaya yang dapat memengaruhi hasil akhir transaksi.",
   items: [
     {
       id: "spread",
       title: "Spread",
-      tagline: "Selisih harga beli dan jual.",
+      tagline: "Selisih harga beli dan jual",
       body: "Jika input simulator adalah harga eksekusi bid/ask, spread sudah tercermin pada harga. Jangan kurangi spread lagi. Spread dapat berubah, bukan biaya tetap.",
     },
     {
       id: "komisi",
-      title: "Komisi",
-      tagline: "Biaya layanan transaksi.",
-      body: "Komisi adalah biaya layanan atas transaksi. Nominalnya belum dikonfirmasi pada brosur ini, jadi cek nilai terbaru di kanal resmi.",
+      title: "Komisi Transaksi",
+      tagline: null,
+      body: "Biaya layanan transaksi sesuai ketentuan yang berlaku.",
     },
     {
       id: "pajak",
       title: "Pajak",
-      tagline: "Dihitung dari basis biaya yang berlaku.",
+      tagline: null,
       body: "Pajak dihitung dari basis biaya sesuai ketentuan yang berlaku. Tarif efektif belum dikonfirmasi pada brosur ini.",
     },
     {
       id: "rollover",
       title: "Rollover",
-      tagline: "Biaya posisi yang menginap.",
+      tagline: null,
       body: "Ketentuan, nominal, dan waktu cutoff rollover belum diverifikasi. Periksa informasi terkini melalui kanal resmi.",
     },
   ],
-  verifyBadge: "PERLU VERIFIKASI",
   note: "Nominal komisi, tarif pajak efektif, dan cutoff rollover masih perlu pemeriksaan. Hasil bersih tetap dikunci sampai dikonfirmasi.",
 };
 

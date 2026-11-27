@@ -9,6 +9,9 @@ export interface BrochureContextValue {
   openRisk: () => void;
   /** true setelah pengguna berpindah slide (untuk memindah fokus secara terkontrol) */
   navigated: boolean;
+  /** true bila section Sampul di halaman pembuka sudah dimunculkan */
+  coverRevealed: boolean;
+  revealCover: () => void;
   quiz: QuizState;
   setQuiz: (q: QuizState) => void;
 }

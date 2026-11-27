@@ -1,9 +1,10 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
 
 /**
  * Bottom sheet berbasis <dialog> modal: fokus terkunci di dalam, Esc menutup,
  * dan fokus dikembalikan ke pemicu oleh browser (tidak ada keyboard trap).
+ * Animasi buka/tutup diatur di globals.css (dialog.sheet).
  */
 export function BottomSheet({
   open,
@@ -17,12 +18,34 @@ export function BottomSheet({
   children: ReactNode;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  // Isi tetap dirender sampai animasi tutup selesai
+  const [rendered, setRendered] = useState(open);
+  if (open && !rendered) setRendered(true);
 
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
-    if (open && !d.open) d.showModal();
-    if (!open && d.open) d.close();
+    if (open) {
+      delete d.dataset.closing;
+      if (!d.open) d.showModal();
+      return;
+    }
+    if (!d.open) return setRendered(false);
+
+    d.dataset.closing = "true";
+    let cancelled = false;
+    // Tanpa animasi (mis. tidak didukung), daftar ini kosong dan dialog langsung ditutup
+    void Promise.allSettled(
+      d.getAnimations().map((animation) => animation.finished),
+    ).then(() => {
+      if (cancelled) return;
+      d.close();
+      delete d.dataset.closing;
+      setRendered(false);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [open]);
 
   return (
@@ -31,6 +54,11 @@ export function BottomSheet({
       className="sheet"
       aria-label={title}
       onClose={onClose}
+      // Esc: tahan penutupan instan agar animasi tutup sempat diputar
+      onCancel={(e) => {
+        e.preventDefault();
+        onClose();
+      }}
       onClick={(e) => {
         if (e.target === ref.current) onClose();
       }}
@@ -47,7 +75,7 @@ export function BottomSheet({
             <X className="size-5" aria-hidden />
           </button>
         </div>
-        {open && children}
+        <div className="sheet-body">{rendered && children}</div>
       </div>
     </dialog>
   );

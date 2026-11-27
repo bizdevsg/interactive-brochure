@@ -15,6 +15,7 @@
   --danger: #ef4444;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --font-brand: Calibri, Carlito, ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {
@@ -28,19 +29,35 @@
   --color-line: var(--line);
   --color-muted: var(--muted);
   --color-danger: var(--danger);
-  --font-sans: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-brand);
 }
 
 html,
 body {
   background: #000000;
   color: #fff;
-  font-family: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-brand);
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
   overflow: hidden;
   height: 100%;
   overscroll-behavior: none;
+}
+
+/* Bayangan teks di seluruh brosur agar tetap terbaca di atas gambar latar.
+   Diwariskan dari body: bayangan rapat untuk ketajaman, bayangan lebar untuk kontras. */
+body {
+  text-shadow:
+    0 1px 2px rgb(0 0 0 / 0.9),
+    0 2px 10px rgb(0 0 0 / 0.65);
+}
+
+/* Dikecualikan: teks gelap di atas emas jadi terlihat kotor, dan teks bergradasi
+   (warnanya transparan) akan tertimpa bayangannya sendiri */
+.text-black,
+.text-ink,
+.gold-text {
+  text-shadow: none;
 }
 
 /* Fokus terlihat (WCAG 2.2) */
@@ -127,6 +144,14 @@ body::-webkit-scrollbar,
   height: 0;
 }
 
+/* Isi memudar sebelum mencapai tombol navigasi bawah. Dipakai sebagai pengganti
+   latar hitam pada navigasi, agar gambar latar tetap terlihat di bagian itu. */
+.fade-under-nav {
+  mask-image: linear-gradient(to bottom,
+      #000 calc(100% - 5.75rem),
+      transparent calc(100% - 4.75rem));
+}
+
 /* Accordion tanpa animasi layout berat: grid-rows trick */
 .expand {
   display: grid;
@@ -157,19 +182,81 @@ dialog.sheet::backdrop {
   background: rgb(0 0 0 / 0.7);
 }
 
+/* Popup naik dari bawah, latar menggelap, lalu isinya menyusul berurutan */
 dialog.sheet[open] {
-  animation: sheet-in 0.28s ease-out;
+  animation: sheet-in 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+dialog.sheet[open]::backdrop {
+  animation: sheet-fade-in 0.32s ease-out;
+}
+
+dialog.sheet[open] .sheet-body > * {
+  animation: sheet-rise 0.4s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: 0.3s;
+}
+
+dialog.sheet[open] .sheet-body > :nth-child(1) {
+  animation-delay: 0.12s;
+}
+
+dialog.sheet[open] .sheet-body > :nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+dialog.sheet[open] .sheet-body > :nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+/* Saat menutup: atribut data-closing dipasang BottomSheet sebelum dialog ditutup */
+dialog.sheet[open][data-closing] {
+  animation: sheet-out 0.24s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+dialog.sheet[open][data-closing]::backdrop {
+  animation: sheet-fade-out 0.24s ease-in forwards;
 }
 
 @keyframes sheet-in {
   from {
-    transform: translateY(24px);
-    opacity: 0;
+    transform: translateY(100%);
+    opacity: 0.4;
   }
 
   to {
     transform: none;
     opacity: 1;
+  }
+}
+
+@keyframes sheet-out {
+  from {
+    transform: none;
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(100%);
+    opacity: 0.4;
+  }
+}
+
+@keyframes sheet-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes sheet-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes sheet-rise {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
   }
 }
 
@@ -193,8 +280,10 @@ dialog.sheet[open] {
 
   *,
   *::before,
-  *::after {
+  *::after,
+  *::backdrop {
     animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;

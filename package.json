@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^7.1.9",
-    "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+    "@fontsource/carlito": "^5.3.0",
     "astro": "^7.4.13",
     "lucide-react": "^1.79.0",
     "motion": "^14.14.0",
